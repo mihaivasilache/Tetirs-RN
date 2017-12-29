@@ -1,5 +1,5 @@
-import pygame, random
-from pygame.locals import *
+import pygame
+import random
 
 WHITE = (255, 255, 255)
 GRAY = (185, 185, 185)
@@ -241,3 +241,7 @@ def remove_complete_lines(board):
         else:
             y -= 1
     return num_lines_removed
+
+
+if __name__ == "__main__":
+    pass

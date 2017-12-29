@@ -5,28 +5,20 @@ WHITE = (255, 255, 255)
 GRAY = (185, 185, 185)
 BLACK = (0, 0, 0)
 RED = (155, 0, 0)
-LIGHT_RED = (175, 20, 20)
-GREEN = (0, 155, 0)
-LIGHT_GREEN = (20, 175, 20)
 BLUE = (0, 0, 155)
-LIGHT_BLUE = (20, 20, 175)
-YELLOW = (155, 155, 0)
-LIGHT_YELLOW = (175, 175, 20)
 WINDOW_WIDTH = 260
 WINDOW_HEIGHT = 440
 BOX_SIZE = 20
 BOARD_WIDTH = 10
 BOARD_HEIGHT = 20
-BLANK = '.'
+BLANK = 0
 FPS = 30
 
 BORDER_COLOR = BLUE
 BG_COLOR = BLACK
 TEXT_COLOR = WHITE
 TEXT_SHADOW_COLOR = GRAY
-COLORS = (BLUE, GREEN, RED, YELLOW)
-LIGHT_COLORS = (LIGHT_BLUE, LIGHT_GREEN, LIGHT_RED, LIGHT_YELLOW)
-assert len(COLORS) == len(LIGHT_COLORS)
+COLOR = RED
 
 X_MARGIN = int((WINDOW_WIDTH - BOARD_WIDTH * BOX_SIZE) / 2)
 TOP_MARGIN = WINDOW_HEIGHT - (BOARD_HEIGHT * BOX_SIZE) - 5
@@ -34,107 +26,107 @@ TOP_MARGIN = WINDOW_HEIGHT - (BOARD_HEIGHT * BOX_SIZE) - 5
 TEMPLATE_WIDTH = 5
 TEMPLATE_HEIGHT = 5
 
-S_SHAPE_TEMPLATE = [['.....',
-                     '.....',
-                     '..OO.',
-                     '.OO..',
-                     '.....'],
-                    ['.....',
-                     '..O..',
-                     '..OO.',
-                     '...O.',
-                     '.....']]
+S_SHAPE_TEMPLATE = [[[0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 0, 1, 1, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 1, 0],
+                     [0, 0, 0, 1, 0],
+                     [0, 0, 0, 0, 0]]]
 
-Z_SHAPE_TEMPLATE = [['.....',
-                     '.....',
-                     '.OO..',
-                     '..OO.',
-                     '.....'],
-                    ['.....',
-                     '..O..',
-                     '.OO..',
-                     '.O...',
-                     '.....']]
+Z_SHAPE_TEMPLATE = [[[0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 0, 1, 1, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 1, 0, 0, 0],
+                     [0, 0, 0, 0, 0]]]
 
-I_SHAPE_TEMPLATE = [['..O..',
-                     '..O..',
-                     '..O..',
-                     '..O..',
-                     '.....'],
-                    ['.....',
-                     '.....',
-                     'OOOO.',
-                     '.....',
-                     '.....']]
+I_SHAPE_TEMPLATE = [[[0, 0, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0],
+                     [1, 1, 1, 1, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0]]]
 
-O_SHAPE_TEMPLATE = [['.....',
-                     '.....',
-                     '.OO..',
-                     '.OO..',
-                     '.....']]
+O_SHAPE_TEMPLATE = [[[0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 0, 0, 0, 0]]]
 
-J_SHAPE_TEMPLATE = [['.....',
-                     '.O...',
-                     '.OOO.',
-                     '.....',
-                     '.....'],
-                    ['.....',
-                     '..OO.',
-                     '..O..',
-                     '..O..',
-                     '.....'],
-                    ['.....',
-                     '.....',
-                     '.OOO.',
-                     '...O.',
-                     '.....'],
-                    ['.....',
-                     '..O..',
-                     '..O..',
-                     '.OO..',
-                     '.....']]
+J_SHAPE_TEMPLATE = [[[0, 0, 0, 0, 0],
+                     [0, 1, 0, 0, 0],
+                     [0, 1, 1, 1, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 1, 1, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 1, 1, 1, 0],
+                     [0, 0, 0, 1, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 0, 0, 0, 0]]]
 
-L_SHAPE_TEMPLATE = [['.....',
-                     '...O.',
-                     '.OOO.',
-                     '.....',
-                     '.....'],
-                    ['.....',
-                     '..O..',
-                     '..O..',
-                     '..OO.',
-                     '.....'],
-                    ['.....',
-                     '.....',
-                     '.OOO.',
-                     '.O...',
-                     '.....'],
-                    ['.....',
-                     '.OO..',
-                     '..O..',
-                     '..O..',
-                     '.....']]
+L_SHAPE_TEMPLATE = [[[0, 0, 0, 0, 0],
+                     [0, 0, 0, 1, 0],
+                     [0, 1, 1, 1, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 1, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 1, 1, 1, 0],
+                     [0, 1, 0, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 0, 0, 0]]]
 
-T_SHAPE_TEMPLATE = [['.....',
-                     '..O..',
-                     '.OOO.',
-                     '.....',
-                     '.....'],
-                    ['.....',
-                     '..O..',
-                     '..OO.',
-                     '..O..',
-                     '.....'],
-                    ['.....',
-                     '.....',
-                     '.OOO.',
-                     '..O..',
-                     '.....'],
-                    ['.....',
-                     '..O..',
-                     '.OO..',
-                     '..O..',
-                     '.....']]
+T_SHAPE_TEMPLATE = [[[0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 1, 1, 1, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 1, 1, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0],
+                     [0, 1, 1, 1, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 0, 0, 0]],
+                    [[0, 0, 0, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 1, 1, 0, 0],
+                     [0, 0, 1, 0, 0],
+                     [0, 0, 0, 0, 0]]]
 
 SHAPES = {'S': S_SHAPE_TEMPLATE,
           'Z': Z_SHAPE_TEMPLATE,
@@ -165,8 +157,7 @@ def draw_box(screen, box_x, box_y, draw_color, pixel_x=None, pixel_y=None):
         return
     if pixel_x is None and pixel_y is None:
         pixel_x, pixel_y = convert_to_pixel_cords(box_x, box_y)
-    pygame.draw.rect(screen, COLORS[draw_color], (pixel_x + 1, pixel_y + 1, BOX_SIZE - 1, BOX_SIZE - 1))
-    pygame.draw.rect(screen, LIGHT_COLORS[draw_color], (pixel_x + 1, pixel_y + 1, BOX_SIZE - 4, BOX_SIZE - 4))
+    pygame.draw.rect(screen, COLOR, (pixel_x + 1, pixel_y + 1, BOX_SIZE - 1, BOX_SIZE - 1))
 
 
 def get_new_piece():
@@ -175,7 +166,7 @@ def get_new_piece():
                  'rotation': random.randint(0, len(SHAPES[shape]) - 1),
                  'x': int(BOARD_WIDTH / 2) - int(TEMPLATE_WIDTH / 2),
                  'y': -2,
-                 'color': random.randint(0, len(COLORS)-1)}
+                 'color': 1}
     return new_piece
 
 

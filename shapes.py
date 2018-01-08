@@ -248,11 +248,16 @@ def get_piece_height(piece_shape):
             if piece_shape[y][x] == 1:
                 if first_piece is None:
                     first_piece = y
-
                 height += 1
                 break
 
     return height, first_piece
+
+
+def get_first_x(piece_shape, y):
+    for x in range(0, len(piece_shape[y])):
+        if piece_shape[y][x] != BLANK:
+            return x
 
 
 def get_board_score(board, piece):
@@ -262,27 +267,36 @@ def get_board_score(board, piece):
     piece_height, first_piece = get_piece_height(piece_shape)
 
     new_board = deepcopy(board)
+    temp_board = get_blank_board()
     add_to_board(new_board, piece)
-    import time
-    # print('y: ' + str(piece['y']))
-    # print('h: ' + str(piece_height))
+    add_to_board(temp_board, piece)
+
     for y in range(piece['y'] + first_piece, piece['y'] + first_piece + piece_height):
-        for x in range(BOARD_WIDTH):
-            if new_board[x][y] != BLANK:
-                completed_blocks += 1
+        completed_blocks = 0
+        x_to_remember = -1
+        for temp_x in range(BOARD_WIDTH):
+            if temp_board[temp_x][y] != BLANK:
+                x_to_remember = temp_x
+                break
 
-        line_score += ((completed_blocks) ** 3) # * (y - (piece['y'] + first_piece) + 1)
-        line = [new_board[x][y] for x in range(BOARD_WIDTH)]
-    #     print('completed blocks: ', completed_blocks)
-    #     print('pondere linie: ', (y - (piece['y'] + first_piece) + 1))
-    #     print('score: ', line_score)
-    #     print('line:  ', line)
-    #     time.sleep(1)
-    #     print('-' * 10)
+        x = x_to_remember
+        while x >= 0 and new_board[x][y] != BLANK:
+            completed_blocks += 1
+            x -= 1
 
-    # print('*' * 30)
+        x = x_to_remember + 1
+        while x < BOARD_WIDTH and new_board[x][y] != BLANK:
+            completed_blocks += 1
+            x += 1
+
+        line_score += completed_blocks ** 3
+
+    # line_score += piece['y']
 
     return line_score
+
+def get_lowest_move(board, piece):
+
 
 
 if __name__ == "__main__":

@@ -17,19 +17,21 @@ def initialise():
 
 
 def start_game(screen, clock, speed):
+
     global DISPLAY
     global SAVE_FILE
 
     board = get_blank_board()
     piece = get_new_piece()
 
+    current_epsilon = -1
     file_name = 1
     need_new_piece = False
     score = 0
-    move_loss = 10
+    move_loss = 0
     move_win = 5000
     line_good_score = 1
-    stay_alive = 5
+    stay_alive = 0
     start_time = time.time()
     game_over = False
 
@@ -41,14 +43,15 @@ def start_game(screen, clock, speed):
             piece = get_new_piece()
 
         if not is_valid_position(board, piece):
-            # print('Score: ' + str(score))
+            if file_name % 50 == 0:
+                print('Iteration: ' + str(file_name) + ' Score: ' + str(score) + ' Epsilon: ' + str(agent.epsilon))
             game_over = True
             agent.remember(state, action, score, next_state, game_over)
             agent.replay(32)
 
-            if file_name % 20 == 0:
+            if file_name % 10000 == 0:
                 print('Saving model.')
-                agent.save_model(SAVE_FILE)
+                agent.save_model(SAVE_FILE + str(file_name))
 
             file_name += 1
             board = get_blank_board()
@@ -57,7 +60,8 @@ def start_game(screen, clock, speed):
             piece = get_new_piece()
             start_time = time.time()
             game_over = False
-            screen, clock = initialise()
+            if DISPLAY:
+                screen, clock = initialise()
 
         state = np.array([i for j in board for i in j])
         state = state.reshape(1, 200)
@@ -94,20 +98,27 @@ def start_game(screen, clock, speed):
                 if event.key == pygame.K_ESCAPE:
                     if DISPLAY:
                         DISPLAY = False
+                        if current_epsilon != -1:
+                            agent.epsilon = current_epsilon
                     else:
                         DISPLAY = True
+                        screen, clock = initialise()
+                        current_epsilon = agent.epsilon
+                        agent.epsilon = 0
 
+
+        sleep = False
         piece['y'] += 1
         if not is_valid_position(board, piece):
             piece['y'] -= 1
-            add_to_board(board, piece)
             lines_score = get_board_score(board, piece)
+            add_to_board(board, piece)
             score += lines_score * line_good_score
             lines_completed = remove_complete_lines(board)
             score += lines_completed * move_win
             need_new_piece = True
             # print('ls:', lines_score)
-            # time.sleep(5)
+            sleep = False
 
         if DISPLAY:
             screen.fill(BG_COLOR)
@@ -127,6 +138,10 @@ def start_game(screen, clock, speed):
         # if time.time() - start_time > 0:
         #     DISPLAY = True
 
+        if sleep:
+            time.sleep(10)
+            sleep = False
+
         if speed != 0:
             time.sleep(speed)
 
@@ -137,6 +152,7 @@ def start_game(screen, clock, speed):
             score += stay_alive
 
         agent.remember(state, action, score, next_state, game_over)
+
 
         # print(score)
 

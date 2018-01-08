@@ -1,7 +1,9 @@
 from collections import deque
 
 from keras import *
+import os
 import random
+from keras.models import load_model
 from keras.layers import *
 from keras.optimizers import *
 
@@ -15,14 +17,16 @@ class Network:
         self.epsilon = 1.0
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
-        self.learning_rate = 0.001
+        self.learning_rate = 0.01
         self.model = self.build_model()
 
     def build_model(self):
         model = Sequential()
         model.add(Dense(self.state_size, input_dim=self.state_size, activation='relu'))
-        model.add(Dense(100, activation='relu'))
-        model.add(Dense(self.action_size, activation='linear'))
+        model.add(Dense(128, activation='relu'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(self.action_size, activation='softmax'))
         model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
         return model
 
@@ -47,3 +51,13 @@ class Network:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
+    def save_model(self, filename):
+        self.model.save(filename)
+
+    def load_model(self, filename):
+        if os.path.exists(filename):
+            self.model = load_model(filename)
+            print('gasit')
+            return True
+
+        return False

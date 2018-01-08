@@ -1,5 +1,9 @@
 import pygame
 import random
+import math
+
+from copy import deepcopy
+
 
 WHITE = (255, 255, 255)
 GRAY = (185, 185, 185)
@@ -8,11 +12,13 @@ RED = (155, 0, 0)
 BLUE = (0, 0, 155)
 WINDOW_WIDTH = 260
 WINDOW_HEIGHT = 440
+# WINDOW_WIDTH = 500
+# WINDOW_HEIGHT = 2014
 BOX_SIZE = 20
 BOARD_WIDTH = 10
 BOARD_HEIGHT = 20
 BLANK = 0
-FPS = 30
+FPS = 60
 
 BORDER_COLOR = BLUE
 BG_COLOR = BLACK
@@ -232,6 +238,51 @@ def remove_complete_lines(board):
         else:
             y -= 1
     return num_lines_removed
+
+
+def get_piece_height(piece_shape):
+    height = 0
+    first_piece = None
+    for y in range(len(piece_shape)):
+        for x in range(len(piece_shape[y])):
+            if piece_shape[y][x] == 1:
+                if first_piece is None:
+                    first_piece = y
+
+                height += 1
+                break
+
+    return height, first_piece
+
+
+def get_board_score(board, piece):
+    completed_blocks = 0
+    line_score = 0
+    piece_shape = SHAPES[piece['shape']][piece['rotation']]
+    piece_height, first_piece = get_piece_height(piece_shape)
+
+    new_board = deepcopy(board)
+    add_to_board(new_board, piece)
+    import time
+    # print('y: ' + str(piece['y']))
+    # print('h: ' + str(piece_height))
+    for y in range(piece['y'] + first_piece, piece['y'] + first_piece + piece_height):
+        for x in range(BOARD_WIDTH):
+            if new_board[x][y] != BLANK:
+                completed_blocks += 1
+
+        line_score += ((completed_blocks - BOARD_WIDTH / 2) ** 4) # * (y - (piece['y'] + first_piece) + 1)
+        line = [new_board[x][y] for x in range(BOARD_WIDTH)]
+    #     print('completed blocks: ', completed_blocks)
+    #     print('pondere linie: ', (y - (piece['y'] + first_piece) + 1))
+    #     print('score: ', line_score)
+    #     print('line:  ', line)
+    #     time.sleep(1)
+    #     print('-' * 10)
+
+    # print('*' * 30)
+
+    return line_score
 
 
 if __name__ == "__main__":

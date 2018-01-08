@@ -261,8 +261,8 @@ def get_first_x(piece_shape, y):
 
 
 def get_board_score(board, piece):
-    completed_blocks = 0
     line_score = 0
+
     piece_shape = SHAPES[piece['shape']][piece['rotation']]
     piece_height, first_piece = get_piece_height(piece_shape)
 
@@ -270,6 +270,8 @@ def get_board_score(board, piece):
     temp_board = get_blank_board()
     add_to_board(new_board, piece)
     add_to_board(temp_board, piece)
+
+    line_score -= piece['y'] - get_lowest_move(board, piece)**2
 
     for y in range(piece['y'] + first_piece, piece['y'] + first_piece + piece_height):
         completed_blocks = 0
@@ -295,7 +297,18 @@ def get_board_score(board, piece):
 
     return line_score
 
+
 def get_lowest_move(board, piece):
+    new_piece = deepcopy(piece)
+    max_y = -1
+    for x in range(BOARD_WIDTH):
+        new_piece['y'] = 0
+        new_piece['x'] = x
+        while is_valid_position(board, new_piece) is True:
+            new_piece['y'] += 1
+        if new_piece['y'] > max_y:
+            max_y = new_piece['y']
+    return max_y
 
 
 

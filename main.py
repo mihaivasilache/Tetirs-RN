@@ -41,7 +41,7 @@ def start_game(screen, clock, speed):
             piece = get_new_piece()
 
         if not is_valid_position(board, piece):
-            print('Score: ' + str(score))
+            # print('Score: ' + str(score))
             game_over = True
             agent.remember(state, action, score, next_state, game_over)
             agent.replay(32)
@@ -107,7 +107,7 @@ def start_game(screen, clock, speed):
             score += lines_completed * move_win
             need_new_piece = True
             # print('ls:', lines_score)
-            time.sleep(5)
+            # time.sleep(5)
 
         if DISPLAY:
             screen.fill(BG_COLOR)

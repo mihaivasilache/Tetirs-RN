@@ -271,7 +271,7 @@ def get_board_score(board, piece):
             if new_board[x][y] != BLANK:
                 completed_blocks += 1
 
-        line_score += ((completed_blocks - BOARD_WIDTH / 2) ** 4) # * (y - (piece['y'] + first_piece) + 1)
+        line_score += ((completed_blocks) ** 3) # * (y - (piece['y'] + first_piece) + 1)
         line = [new_board[x][y] for x in range(BOARD_WIDTH)]
     #     print('completed blocks: ', completed_blocks)
     #     print('pondere linie: ', (y - (piece['y'] + first_piece) + 1))

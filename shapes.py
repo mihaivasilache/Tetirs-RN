@@ -271,8 +271,11 @@ def get_board_score(board, piece):
     add_to_board(new_board, piece)
     add_to_board(temp_board, piece)
 
-    line_score -= piece['y'] - get_lowest_move(board, piece)**2
+    # cea mai mica miscare posibila
+    line_score -= (get_lowest_move(board, piece) - piece['y']) ** 2
+    # print(line_score)
 
+    # consturirea celei mai bune linii
     for y in range(piece['y'] + first_piece, piece['y'] + first_piece + piece_height):
         completed_blocks = 0
         x_to_remember = -1
@@ -293,9 +296,23 @@ def get_board_score(board, piece):
 
         line_score += completed_blocks ** 3
 
-    # line_score += piece['y']
+    # contacul cu alte piese
+    contact = 0
+    for y in range(piece['y'] + first_piece, piece['y'] + first_piece + piece_height):
+        for temp_x in range(BOARD_WIDTH):
+            if temp_board[temp_x][y] != BLANK:
+                if temp_x + 1 < BOARD_WIDTH:
+                    contact += new_board[temp_x + 1][y] - temp_board[temp_x + 1][y]
+                if temp_x - 1 >= 0:
+                    contact += new_board[temp_x - 1][y] - temp_board[temp_x - 1][y]
+                if y + 1 < BOARD_HEIGHT:
+                    contact += new_board[temp_x ][y + 1] - temp_board[temp_x][y + 1]
+                if y - 1 >= 0:
+                    contact += new_board[temp_x][y - 1] - temp_board[temp_x][y - 1]
 
-    return line_score
+    contact = (contact ** 3)
+    # print('contact' + str(contact))
+    return line_score + contact
 
 
 def get_lowest_move(board, piece):
@@ -309,7 +326,6 @@ def get_lowest_move(board, piece):
         if new_piece['y'] > max_y:
             max_y = new_piece['y']
     return max_y
-
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ from network import *
 import numpy as np
 
 DISPLAY = True
-SAVE_FILE = 'data/model.h5'
+SAVE_FILE = 'data8\h11-'
 
 
 def initialise():
@@ -28,6 +28,7 @@ def start_game(screen, clock, speed):
     file_name = 1
     need_new_piece = False
     score = 0
+    total_score = 0
     move_loss = 0
     move_win = 5000
     line_good_score = 1
@@ -37,21 +38,27 @@ def start_game(screen, clock, speed):
 
     agent = Network(BOARD_HEIGHT * BOARD_WIDTH, 4)
     agent.load_model(SAVE_FILE)
+    max_score = -9999999999
 
     while True:
         if piece is None:
             piece = get_new_piece()
 
         if not is_valid_position(board, piece):
-            if file_name % 50 == 0:
-                print('Iteration: ' + str(file_name) + ' Score: ' + str(score) + ' Epsilon: ' + str(agent.epsilon))
+            if file_name % 1 == 0:
+                print('Iteration: ' + str(file_name) + ' Score: ' + str(total_score) + ' Epsilon: ' + str(agent.epsilon))
             game_over = True
+            if total_score > max_score:
+                max_score = total_score
+            score -= 10000
             agent.remember(state, action, score, next_state, game_over)
             agent.replay(32)
 
-            if file_name % 10000 == 0:
+            if file_name % 250 == 0:
                 print('Saving model.')
-                agent.save_model(SAVE_FILE + str(file_name))
+                agent.save_model(SAVE_FILE + str(file_name) + ' - ' + str(max_score))
+
+            total_score = 0
 
             file_name += 1
             board = get_blank_board()
@@ -60,17 +67,17 @@ def start_game(screen, clock, speed):
             piece = get_new_piece()
             start_time = time.time()
             game_over = False
-            if DISPLAY:
-                screen, clock = initialise()
+            screen, clock = initialise()
 
         state = np.array([i for j in board for i in j])
         state = state.reshape(1, 200)
         action = agent.act(state)
+        # print(action)
 
         # print(state.shape)
         # for event in pygame.event.get():
         if action == 0:
-            continue
+            pass
         # elif event.key == K_SPACE and event.type == pygame.KEYDOWN:
         elif action == 1:
             piece['rotation'] = (piece['rotation'] - 1) % len(SHAPES[piece['shape']])
@@ -102,10 +109,9 @@ def start_game(screen, clock, speed):
                             agent.epsilon = current_epsilon
                     else:
                         DISPLAY = True
-                        screen, clock = initialise()
+                        # screen, clock = initialise()
                         current_epsilon = agent.epsilon
                         agent.epsilon = 0
-
 
         sleep = False
         piece['y'] += 1
@@ -127,20 +133,12 @@ def start_game(screen, clock, speed):
             if piece is not None:
                 draw_piece(screen, piece)
 
-        if need_new_piece:
-            piece = get_new_piece()
-            need_new_piece = False
-
         if DISPLAY:
             pygame.display.update()
             clock.tick(FPS)
 
-        # if time.time() - start_time > 0:
-        #     DISPLAY = True
-
         if sleep:
-            time.sleep(10)
-            sleep = False
+            time.sleep(2)
 
         if speed != 0:
             time.sleep(speed)
@@ -153,6 +151,14 @@ def start_game(screen, clock, speed):
 
         agent.remember(state, action, score, next_state, game_over)
 
+        total_score += score
+
+        # print(score)
+
+        if need_new_piece:
+            piece = get_new_piece()
+            need_new_piece = False
+            score = 0
 
         # print(score)
 

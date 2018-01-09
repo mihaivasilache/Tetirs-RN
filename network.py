@@ -16,17 +16,17 @@ class Network:
         self.gamma = 0.95
         self.epsilon = 1.0
         self.epsilon_min = 0.01
-        self.epsilon_decay = 0.9999
+        self.epsilon_decay = 0.99995
         self.learning_rate = 0.01
         self.model = self.build_model()
 
     def build_model(self):
         model = Sequential()
         model.add(Dense(self.state_size, input_dim=self.state_size, activation='relu'))
-        model.add(Dense(128, activation='relu'))
-        model.add(Dense(64, activation='relu'))
-        model.add(Dense(64, activation='relu'))
-        model.add(Dense(self.action_size, activation='relu'))
+        model.add(Dense(150, activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(50, activation='relu'))
+        model.add(Dense(self.action_size, activation='linear'))
         model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
         return model
 
@@ -37,6 +37,10 @@ class Network:
         if np.random.rand() <= self.epsilon:
             return random.randrange(self.action_size)
         act_values = self.model.predict(state)
+        # print(act_values[0], np.argmax(act_values[0]))
+        if act_values[0][0] == act_values[0][1] == act_values[0][2] == act_values[0][3]:
+            return random.randrange(self.action_size)
+        # print(act_values[0], np.argmax(act_values[0]))
         return np.argmax(act_values[0])
 
     def replay(self, batch_size):
@@ -46,6 +50,7 @@ class Network:
             if not done:
                 target = reward + self.gamma * np.amax(self.model.predict(next_state)[0])
             target_f = self.model.predict(state)
+            # print(self.model.predict(state))
             target_f[0][action] = target
             self.model.fit(state, target_f, epochs=1, verbose=0)
         if self.epsilon > self.epsilon_min:
@@ -57,7 +62,7 @@ class Network:
     def load_model(self, filename):
         if os.path.exists(filename):
             self.model = load_model(filename)
-            print('gasit')
+            print('Loading network: '+os.path.split(filename)[1])
             return True
 
         return False

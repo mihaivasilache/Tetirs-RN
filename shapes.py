@@ -314,13 +314,13 @@ def get_board_score(board, piece):
                 if y - 1 >= 0:
                     contact += new_board[temp_x][y - 1] - temp_board[temp_x][y - 1]
 
-        line_score += completed_blocks * (contact ** 2)
+        line_score += completed_blocks * (contact ** 2) + completed_blocks_from_whole_line * 0.2
 
     height = get_height(new_board)
 
     # print(height)
 
-    return line_score * 4 - height * 5
+    return line_score * 4 - height * 4
 
 
 def get_constant_score(board_t, piece_t):
@@ -376,13 +376,13 @@ def get_constant_score(board_t, piece_t):
                 if y - 1 >= 0:
                     contact += new_board[temp_x][y - 1] - temp_board[temp_x][y - 1]
 
-        line_score += completed_blocks * contact
+        line_score += completed_blocks * contact + completed_blocks_from_whole_line*0.1
 
     height = get_height(new_board)
 
     lines_removed = remove_complete_lines(new_board)
 
-    return line_score - height * 2.5 + lines_removed * 2500
+    return line_score - height * 2 + lines_removed * 2500
 
 
 def get_height(board):

@@ -13,18 +13,18 @@ class Network:
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
-        self.gamma = 0.95
+        self.gamma = 0.8
         self.epsilon = 1.0
-        self.epsilon_min = 0.01
-        self.epsilon_decay = 0.99995
+        self.epsilon_min = 0.1
+        self.epsilon_decay = 0.9995
         self.learning_rate = 0.01
         self.model = self.build_model()
 
     def build_model(self):
         model = Sequential()
         model.add(Dense(self.state_size, input_dim=self.state_size, activation='relu'))
-        model.add(Dense(150, activation='relu'))
-        model.add(Dense(100, activation='relu'))
+        model.add(Dense(128, activation='relu'))
+        model.add(Dense(64, activation='relu'))
         model.add(Dense(50, activation='relu'))
         model.add(Dense(self.action_size, activation='linear'))
         model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
@@ -55,6 +55,8 @@ class Network:
             self.model.fit(state, target_f, epochs=1, verbose=0)
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+        # if self.epsilon < self.epsilon_min:
+        #     self.learning_rate = 0.00001
 
     def save_model(self, filename):
         self.model.save(filename)
